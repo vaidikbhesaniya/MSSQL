@@ -159,3 +159,130 @@ WHERE id NOT IN (
         GROUP BY email
     ) AS temp
 );
+
+
+
+
+
+--07 09 2004
+create database sevennine
+use sevennine
+CREATE TABLE Users (
+    users_id INT PRIMARY KEY,
+    banned VARCHAR(10),   -- instead of ENUM
+    role VARCHAR(10)      -- instead of ENUM
+);
+
+CREATE TABLE Trips (
+    id INT PRIMARY KEY,
+    client_id INT,
+    driver_id INT,
+    city_id INT,
+    status VARCHAR(30),   -- instead of ENUM
+    request_at DATE,
+    FOREIGN KEY (client_id) REFERENCES Users(users_id),
+    FOREIGN KEY (driver_id) REFERENCES Users(users_id)
+);
+
+INSERT INTO Users (users_id, banned, role) VALUES
+(1, 'No', 'client'),
+(2, 'Yes', 'client'),
+(3, 'No', 'client'),
+(4, 'No', 'client'),
+(10, 'No', 'driver'),
+(11, 'No', 'driver'),
+(12, 'No', 'driver'),
+(13, 'No', 'driver');
+
+INSERT INTO Trips (id, client_id, driver_id, city_id, status, request_at) VALUES
+(1, 1, 10, 1, 'completed', '2013-10-01'),
+(2, 2, 11, 1, 'cancelled_by_driver', '2013-10-01'),
+(3, 3, 12, 6, 'completed', '2013-10-01'),
+(4, 4, 13, 6, 'cancelled_by_client', '2013-10-01'),
+(5, 1, 10, 1, 'completed', '2013-10-02'),
+(6, 2, 11, 6, 'completed', '2013-10-02'),
+(7, 3, 12, 6, 'completed', '2013-10-02'),
+(8, 2, 12, 12, 'completed', '2013-10-03'),
+(9, 3, 10, 12, 'completed', '2013-10-03'),
+(10, 4, 13, 12, 'cancelled_by_driver', '2013-10-03');
+
+select * from trips
+select * from users
+
+SELECT 
+    t.request_at AS Day,
+    ROUND(
+        CAST(SUM(CASE WHEN t.status IN ('cancelled_by_driver','cancelled_by_client') THEN 1 ELSE 0 END) AS FLOAT)
+        / COUNT(*), 
+        2
+    ) AS Cancellation_Rate
+FROM Trips t
+JOIN Users c ON t.client_id = c.users_id AND c.banned = 'No'
+JOIN Users d ON t.driver_id = d.users_id AND d.banned = 'No'
+WHERE t.request_at BETWEEN '2013-10-01' AND '2013-10-03'
+GROUP BY t.request_at;
+
+SELECT 
+    request_at AS Day,
+    ROUND(
+        CAST(SUM(CASE WHEN status IN ('cancelled_by_driver','cancelled_by_client') THEN 1 ELSE 0 END) AS FLOAT)
+        / COUNT(*), 
+        2
+    ) AS Cancellation_Rate
+FROM Trips
+GROUP BY request_at;
+
+
+--08-09-25
+CREATE DATABASE eightnine
+USE eightnine
+
+CREATE TABLE Activity (
+    player_id INT,
+    device_id INT,
+    event_date DATE,
+    games_played INT,
+    PRIMARY KEY (player_id, event_date)
+);
+
+
+INSERT INTO Activity (player_id, device_id, event_date, games_played) VALUES
+(1, 2, '2016-03-01', 5),
+(1, 2, '2016-05-02', 6),
+(2, 3, '2017-06-25', 1),
+(3, 1, '2016-03-02', 0),
+(3, 4, '2018-07-03', 5);
+
+select * from activity
+
+select player_id , min(event_date) as first_login
+from activity 
+
+group by player_id
+
+
+
+----
+
+
+CREATE TABLE Customer (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    referee_id INT
+);
+
+
+INSERT INTO Customer (id, name, referee_id) VALUES
+(1, 'Will', NULL),
+(2, 'Jane', NULL),
+(3, 'Alex', 2),
+(4, 'Bill', NULL),
+(5, 'Zack', 1),
+(6, 'Mark', 2);
+
+SELECT * FROM Customer;
+
+
+SELECT name
+FROM Customer
+WHERE referee_id <> 2 OR referee_id IS NULL;
