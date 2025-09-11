@@ -312,3 +312,41 @@ SELECT Top 1 customer_number
 FROM Orders
 GROUP BY customer_number
 ORDER BY COUNT(order_number) DESC;
+
+
+-11/09/25
+
+create database elevennine;
+use elevennine
+
+CREATE TABLE Courses (
+    student VARCHAR(50),
+    class VARCHAR(50),
+    PRIMARY KEY (student, class)
+);
+
+INSERT INTO Courses (student, class) VALUES
+('A', 'Math'),
+('B', 'English'),
+('C', 'Math'),
+('D', 'Biology'),
+('E', 'Math'),
+('F', 'Computer'),
+('G', 'Math'),
+('H', 'Math'),
+('I', 'Math');
+
+--select class from (
+--select top 1 class ,count(class) as total from Courses
+--group by class
+--order by  total desc
+--) as t
+
+ select
+    class
+from
+    Courses 
+group by
+    class
+having
+    count(student)>=5
