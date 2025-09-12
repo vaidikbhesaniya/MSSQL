@@ -1,13 +1,20 @@
 --Write a solution to find all dates' id with higher temperatures compared to its previous dates (yesterday).
 
 --Return the result table in any order.
-
+use weatherdata
 select * from weather
 
 SELECT *
 FROM Weather w1
 JOIN Weather w2
   ON DATEDIFF(DAY, w2.recordDate, w1.recordDate) = 1
+
+
+SELECT w1.id
+FROM Weather w1
+JOIN Weather w2
+  ON DATEDIFF(DAY,w1.recordDate, w2.recordDate) = 1
+WHERE w1.temperature > w2.temperature;
 
 
 
@@ -350,3 +357,123 @@ group by
     class
 having
     count(student)>=5
+
+
+
+--12-09-25
+
+create database twelwenine;
+use twelwenine
+
+CREATE TABLE SalesPerson (                 
+    sales_id INT PRIMARY KEY,
+    name NVARCHAR(50) NOT NULL,
+    salary INT NOT NULL,
+    commission_rate INT NOT NULL,
+    hire_date DATE NOT NULL
+);
+
+
+INSERT INTO SalesPerson (sales_id, name, salary, commission_rate, hire_date)
+VALUES 
+(1, 'John', 100000, 6, '2006-04-01'),
+(2, 'Amy', 12000, 5, '2010-05-01'),
+(3, 'Mark', 65000, 12, '2008-12-25'),
+(4, 'Pam', 25000, 25, '2005-01-01'),
+(5, 'Alex', 5000, 10, '2007-02-03');
+
+CREATE TABLE Company (
+    com_id INT PRIMARY KEY,
+    name NVARCHAR(50) NOT NULL,
+    city NVARCHAR(50) NOT NULL
+);
+
+INSERT INTO Company (com_id, name, city)
+VALUES
+(1, 'RED', 'Boston'),
+(2, 'ORANGE', 'New York'),
+(3, 'YELLOW', 'Boston'),
+(4, 'GREEN', 'Austin');
+
+CREATE TABLE Orders (
+    order_id INT PRIMARY KEY,
+    order_date DATE NOT NULL,
+    com_id INT NOT NULL,
+    sales_id INT NOT NULL,
+    amount INT NOT NULL,
+    FOREIGN KEY (com_id) REFERENCES Company(com_id),
+    FOREIGN KEY (sales_id) REFERENCES SalesPerson(sales_id)
+);
+
+INSERT INTO Orders (order_id, order_date, com_id, sales_id, amount)
+VALUES
+(1, '2014-01-01', 3, 4, 10000),
+(2, '2014-02-01', 4, 5, 5000),
+(3, '2014-03-01', 1, 1, 50000),
+(4, '2014-04-01', 1, 4, 25000);
+
+select * from SalesPerson
+
+select * from Company
+
+select * from Orders
+
+select  * from SalesPerson s
+join orders o on s.sales_id=o.sales_id 
+join Company c on c.com_id=o.com_id
+
+
+SELECT DISTINCT o.sales_id
+FROM Orders o
+JOIN Company c ON o.com_id = c.com_id
+WHERE c.name = 'RED'
+
+
+SELECT name
+FROM SalesPerson
+WHERE sales_id NOT IN (
+    SELECT DISTINCT o.sales_id
+    FROM Orders o
+    JOIN Company c
+        ON o.com_id = c.com_id
+    WHERE c.name = 'RED'
+);
+
+
+-12-09-25
+
+
+--Report for every three line segments whether they can form a triangle.
+
+--Return the result table in any order.
+
+--The result format is in the following example.
+
+create database twelvenine
+use twelvenine
+
+CREATE TABLE Triangle (
+    x INT,
+    y INT,
+    z INT,
+    PRIMARY KEY (x, y, z)
+);
+
+
+INSERT INTO Triangle (x, y, z) VALUES
+(13, 15, 30),
+(10, 20, 15);
+
+
+SELECT
+    x,
+    y,
+    z,
+    CASE
+        WHEN x + y > z AND x + z > y AND y + z > x
+        THEN 'Yes'
+        ELSE 'No'
+    END AS triangle
+FROM Triangle;
+
+
