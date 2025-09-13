@@ -477,3 +477,37 @@ SELECT
 FROM Triangle;
 
 
+
+
+--13/09/25
+
+create database thirteennine
+use thirteennine
+
+CREATE TABLE MyNumbers (
+    num INT
+);
+
+
+INSERT INTO MyNumbers (num)
+VALUES
+(8),
+(8),
+(3),
+(3),
+(1),
+(4),
+(5),
+(6);
+
+select  * from mynumbers
+
+select top 1 num from MyNumbers group by num having count(num)=1 order by num desc 
+
+SELECT MAX(num) AS num
+FROM (
+    SELECT num
+    FROM MyNumbers
+    GROUP BY num
+    HAVING COUNT(num) = 1
+) AS singles;
