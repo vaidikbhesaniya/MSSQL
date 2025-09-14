@@ -511,3 +511,46 @@ FROM (
     GROUP BY num
     HAVING COUNT(num) = 1
 ) AS singles;
+
+
+--14/09/25
+
+create database forteennine
+use forteennine
+
+
+
+CREATE TABLE Employee (
+    employee_id INT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    experience_years INT NOT NULL
+);
+
+
+CREATE TABLE Project (
+    project_id INT NOT NULL,
+    employee_id INT NOT NULL,
+    PRIMARY KEY (project_id, employee_id),
+    FOREIGN KEY (employee_id) REFERENCES Employee(employee_id)
+);
+
+
+INSERT INTO Employee (employee_id, name, experience_years) VALUES
+(1, 'Khaled', 3),
+(2, 'Ali', 2),
+(3, 'John', 1),
+(4, 'Doe', 2);
+
+
+INSERT INTO Project (project_id, employee_id) VALUES
+(1, 1),
+(1, 2),
+(1, 3),
+(2, 1),
+(2, 4);
+
+select * from Employee
+select * from Project
+
+
+select  * ,count(employee_id) from employee e join project p on e.employee_id=p.project_id
