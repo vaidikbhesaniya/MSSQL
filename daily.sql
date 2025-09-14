@@ -553,4 +553,18 @@ select * from Employee
 select * from Project
 
 
-select  * ,count(employee_id) from employee e join project p on e.employee_id=p.project_id
+select  * from employee e join project p on e.employee_id=p.employee_id
+SELECT 
+    p.project_id,
+    AVG(e.employee_id) AS employee_count
+FROM Project p
+JOIN Employee e 
+    ON e.employee_id = p.employee_id
+GROUP BY p.project_id;
+SELECT 
+    p.project_id,
+    ROUND(AVG(e.experience_years * 1.0), 2) AS average_years
+FROM Project p
+JOIN Employee e 
+    ON p.employee_id = e.employee_id
+GROUP BY p.project_id;
