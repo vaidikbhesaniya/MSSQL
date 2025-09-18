@@ -640,3 +640,60 @@ GROUP BY id;
 
 
 
+create database triggerprac
+use triggerprac
+--MYSQL
+CREATE TABLE employees (
+    emp_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    salary DECIMAL(10,2) NOT NULL,
+    department VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+--Mssql
+CREATE TABLE Employees (
+    EmpID INT IDENTITY(1,1) PRIMARY KEY,
+    Name NVARCHAR(50) NOT NULL,
+    Salary DECIMAL(10,2) NOT NULL,
+    Department NVARCHAR(50),
+    CreatedAt DATETIME DEFAULT GETDATE()
+);
+
+INSERT INTO Employees (Name, Salary, Department) VALUES
+('Alice', 50000, 'HR'),
+('Bob', 60000, 'IT'),
+('Charlie', 55000, 'Finance');
+
+delete from employees
+truncate table employees
+truncate table employeelog
+select * from employees
+select * from employeelog
+
+CREATE TABLE EmployeeLog (
+    LogID INT IDENTITY(1,1) PRIMARY KEY,
+    EmpID INT,
+    Action NVARCHAR(50),
+    ActionTime DATETIME DEFAULT GETDATE()
+);
+
+-- insert a new log when perticular employee inserted
+CREATE TRIGGER trgAfterEmployeeInsert
+ON Employees
+AFTER INSERT
+AS
+BEGIN
+    INSERT INTO EmployeeLog (EmpID, Action)
+    SELECT EmpID, 'Employee Added' FROM inserted;
+END;
+
+--delete emplog when perticular employee deleted
+Create trigger trgAfterEmployeeDelete
+on employees
+after delete
+as 
+begin
+    DELETE FROM EmployeeLog
+    WHERE EmpID IN (SELECT EmpID FROM deleted)
+
+end;
